@@ -1,0 +1,7 @@
+<!-- Placeholder SVG for logo.png -->
+<svg width="200" height="100" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="100" fill="#005A5F"/>
+  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="24" font-family="Arial">
+    سراج
+  </text>
+</svg>
