@@ -57,7 +57,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fa" dir="rtl" data-theme="seraj">
-      <body className={`${yekanBakh.variable} antialiased font-yekan`}>
+      <body 
+        className={`${yekanBakh.variable} antialiased font-yekan`}
+        style={{
+          backgroundImage: 'url(/images/pattern1.png)',
+          backgroundRepeat: 'repeat',
+          backgroundSize: '400px 400px',
+          backgroundAttachment: 'fixed'
+        }}
+      >
         {children}
       </body>
     </html>
