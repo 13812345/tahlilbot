@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import DashboardLayout from '@/components/layout/DashboardLayout';
-import Card from '@/components/ui/Card';
-import StatCard from '@/components/ui/StatCard';
-import StatusBadge from '@/components/ui/StatusBadge';
+import { useState, useEffect } from "react";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import Card from "@/components/ui/Card";
+import StatCard from "@/components/ui/StatCard";
+import StatusBadge from "@/components/ui/StatusBadge";
 import {
   IconNews,
   IconClock,
@@ -14,17 +14,38 @@ import {
   IconFlame,
   IconCalendarEvent,
   IconBulb,
-} from '@tabler/icons-react';
-import { mockNews, mockStats, mockHadiths, securityCalendarText } from '@/lib/mockData';
+} from "@tabler/icons-react";
+import {
+  mockNews,
+  mockStats,
+  mockHadiths,
+  securityCalendarText,
+} from "@/lib/mockData";
+
+type HadisType = {
+  person: string;
+  text: string;
+  source: string;
+};
 
 export default function Dashboard() {
   const [currentHadith, setCurrentHadith] = useState(mockHadiths[0]);
-  const [displayedCalendarText, setDisplayedCalendarText] = useState('');
+  const [displayedCalendarText, setDisplayedCalendarText] = useState("");
+  const [hadis, setHadis] = useState<HadisType>();
 
   // تغییر حدیث روزانه
   useEffect(() => {
-    const randomHadith = mockHadiths[Math.floor(Math.random() * mockHadiths.length)];
-    setCurrentHadith(randomHadith);
+    const getHadis = async () => {
+      try {
+        const res = await fetch(`https://api.keybit.ir/hadis`);
+        const data = await res.json();
+        console.log(data);
+        setHadis(data.result);
+      } catch (error) {
+        console.log(`get hadis`, error);
+      }
+    };
+    getHadis();
   }, []);
 
   // افکت تایپ برای تقویم امنیتی
@@ -60,10 +81,10 @@ export default function Dashboard() {
         <div className="flex items-start gap-3">
           <IconBulb className="w-6 h-6 shrink-0 mt-1" />
           <div className="flex-1 min-w-0">
-            <p className="font-semibold mb-1">💡 حدیث روز:</p>
-            <p className="text-sm leading-relaxed opacity-95">{currentHadith.text}</p>
+            <p className="font-semibold mb-1">حدیث روز از {hadis?.source}💡</p>
+            <p className="text-sm leading-relaxed opacity-95">{hadis?.text}</p>
             {currentHadith.source && (
-              <p className="text-xs mt-2 opacity-75">منبع: {currentHadith.source}</p>
+              <p className="text-xs mt-2 opacity-75">منبع: {hadis?.source}</p>
             )}
           </div>
         </div>
@@ -75,7 +96,9 @@ export default function Dashboard() {
         <Card className="lg:col-span-2 p-6">
           <div className="flex items-center gap-3 mb-4 border-b border-gray-200 pb-3">
             <IconCalendarEvent className="w-6 h-6 text-seraj-primary" />
-            <h3 className="text-xl font-bold text-gray-800">تقویم امنیتی هفته</h3>
+            <h3 className="text-xl font-bold text-gray-800">
+              تقویم امنیتی هفته
+            </h3>
           </div>
           <div className="text-gray-700 leading-relaxed whitespace-pre-wrap text-sm">
             {displayedCalendarText}
@@ -86,7 +109,7 @@ export default function Dashboard() {
         {/* کارت آمار کل اخبار */}
         <StatCard
           icon={<IconNews className="w-12 h-12" />}
-          number={mockStats.totalNews.toLocaleString('fa-IR')}
+          number={mockStats.totalNews.toLocaleString("fa-IR")}
           label="کل اخبار تحلیل شده"
         />
       </div>
@@ -95,21 +118,21 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         <StatCard
           icon={<IconClock className="w-10 h-10" />}
-          number={mockStats.last24Hours.toLocaleString('fa-IR')}
+          number={mockStats.last24Hours.toLocaleString("fa-IR")}
           label="اخبار ۲۴ ساعت گذشته"
         />
-        
+
         <StatCard
           icon={<IconTags className="w-10 h-10" />}
-          number={mockStats.categories.toLocaleString('fa-IR')}
+          number={mockStats.categories.toLocaleString("fa-IR")}
           label="دسته‌بندی موضوعی"
         />
 
         <StatCard
           icon={<IconUsers className="w-10 h-10" />}
-          number={mockStats.totalMembers.toLocaleString('fa-IR')}
+          number={mockStats.totalMembers.toLocaleString("fa-IR")}
           label="تعداد اعضا شبکه"
-          subNumber={mockStats.activeMembers.toLocaleString('fa-IR')}
+          subNumber={mockStats.activeMembers.toLocaleString("fa-IR")}
           subLabel="اعضا فعال شبکه"
         />
 
@@ -144,9 +167,11 @@ export default function Dashboard() {
       <Card className="p-6">
         <div className="flex items-center gap-3 mb-4 border-b border-gray-200 pb-3">
           <IconFlame className="w-6 h-6 text-red-500" />
-          <h3 className="text-xl font-bold text-gray-800">مهم‌ترین اخبار اخیر</h3>
+          <h3 className="text-xl font-bold text-gray-800">
+            مهم‌ترین اخبار اخیر
+          </h3>
         </div>
-        
+
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50">
@@ -182,11 +207,11 @@ export default function Dashboard() {
                   </td>
                   <td className="px-4 py-3">
                     <StatusBadge type={news.category}>
-                      {news.category === 'economic' && 'اقتصادی'}
-                      {news.category === 'social' && 'اجتماعی'}
-                      {news.category === 'political' && 'سیاسی'}
-                      {news.category === 'cyber' && 'سایبری'}
-                      {news.category === 'sport' && 'ورزشی'}
+                      {news.category === "economic" && "اقتصادی"}
+                      {news.category === "social" && "اجتماعی"}
+                      {news.category === "political" && "سیاسی"}
+                      {news.category === "cyber" && "سایبری"}
+                      {news.category === "sport" && "ورزشی"}
                     </StatusBadge>
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-600">
