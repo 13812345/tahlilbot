@@ -55,7 +55,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
   };
 
   return (
-    <aside className="w-80 bg-white border-l border-gray-200 h-screen overflow-y-auto shadow-2xl transition-all duration-300 flex flex-col">
+    <aside className="w-80 bg-white border-l border-gray-200 h-screen overflow-y-auto  transition-all duration-300 flex flex-col">
       {/* دکمه بستن برای موبایل */}
       {onClose && (
         <button

@@ -65,7 +65,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       
       {/* Sidebar */}
       <div className={`
-        fixed top-0 right-0 h-full z-50
+        fixed top-0 right-0 h-full z-50 bg-white
         transform transition-transform duration-300 lg:translate-x-0
         ${sidebarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
       `}>
